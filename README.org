@@ -1,0 +1,186 @@
+#+TITLE: Workstation Dotfiles
+#+AUTHOR: Nicola Ferru (NFVblog)
+#+LICENSE: GPL v3
+#+DESCRIPTION: Configurazione personale per workstation Arch Linux con Hyprland
+
+Configurazione personale dei dotfiles per [[https://archlinux.org][Arch Linux]] basata su [[https://hyprland.org][Hyprland]] (compositor Wayland), [[https://ghostty.org][Ghostty]] (terminale) e [[https://github.com/Alexays/Waybar][Waybar]] (barra di stato).
+
+* Dipendenze
+Elenco dei pacchetti necessari:
+
+** Hyprland e componenti
+- =hyprland= – Compositor Wayland
+- =hypridle= – Demone idle / sospensione
+- =hyprlock= – Schermata di blocco
+- =hyprsunset= – Filtro luce blu
+- =hyprpolkitagent= – Permessi screencopy
+- =xdg-desktop-portal-hyprland= – Portale per integrazione desktop
+- =xdg-desktop-portal-gtk= – Portale GTK
+
+** Applicazioni
+- =ghostty= – Terminale
+- =waybar= – Barra di stato
+- =pcmanfm-qt= – File manager
+- =hyprlauncher= – Avvio applicazioni (dmenu-style)
+- =emacs= (con =emacsclient=) – Editor / productivity suite
+- =swaync= – Centro notifiche
+- =pavucontrol= – Mixer audio
+- =iwd= (=iwctl=) – Gestione WiFi
+- =obs-studio= – Permessi screencopy
+- =hyprshot= – Screenshot (permessi concessi)
+
+** Utilità di sistema
+- =pipewire= / =wireplumber= (=wpctl=) – Gestione audio
+- =playerctl= – Controllo media (play/pause/next/prev)
+- =brightnessctl= – Controllo luminosità
+- =darkman= – Toggle tema chiaro/scuro
+- =qt6ct= – Theming Qt sotto Wayland
+- =dbus= (=dbus-update-activation-environment=)
+
+** Font (consigliati)
+- =ttf-jetbrains-mono-nerd= – Font per Hyprlock
+- =otf-opendyslexic-nerd= – Font per Ghostty (opzionale, modificabile nel config)
+
+* Installazione
+#+BEGIN_SRC sh
+# Clona il repository
+git clone https://github.com/NFVblog/workstation-dotfiles.git ~/.dotfiles
+
+# Crea i symlink nella tua home
+ln -sf ~/.dotfiles/ghostty  ~/.config/ghostty
+ln -sf ~/.dotfiles/hypr     ~/.config/hypr
+ln -sf ~/.dotfiles/waybar   ~/.config/waybar
+#+END_SRC
+
+* Struttura del repository
+| Percorso               | Descrizione                        |
+|------------------------+------------------------------------|
+| ~hypr/hyprland.lua~      | Punto di ingresso Lua per Hyprland |
+| ~hypr/conf/~             | Moduli di configurazione Hyprland  |
+| ~hypr/hyprlock.conf~     | Schermata di blocco                |
+| ~hypr/hypridle.conf~     | Timeout idle e sospensione         |
+| ~hypr/hyprsunset.conf~   | Filtro luce blu notturna           |
+| ~ghostty/config.ghostty~ | Configurazione terminale           |
+| ~ghostty/shaders/~       | Shader GLSL per effetti terminale  |
+| ~ghostty/themes/~        | Tema chiaro/scuro per Ghostty      |
+| ~waybar/config.jsonc~    | Barra di stato                     |
+| ~waybar/style.css~       | Stile CSS della barra              |
+
+* Tabelle scorciatoie
+
+** Avvio applicazioni
+| Combinazione  | Azione                    |
+|---------------+---------------------------|
+| ~SUPER + Invio~ | Terminale (Ghostty)       |
+| ~SUPER + D~     | Launcher (hyprlauncher)   |
+| ~SUPER + E~     | File manager (pcmanfm-qt) |
+| ~SUPER + F1~    | Emacs (emacsclient -c)    |
+
+** Gestione finestre
+| Combinazione          | Azione                     |
+|-----------------------+----------------------------|
+| ~SUPER + Q~             | Chiudi finestra            |
+| ~SUPER + F~             | Fullscreen (nativo)        |
+| ~SUPER + M~             | Fullscreen (monocle)       |
+| ~SUPER + V~             | Toggle floating            |
+| ~SUPER + Shift + Space~ | Toggle floating (alt)      |
+| ~SUPER + P~             | Toggle pseudo-tiling       |
+| ~SUPER + Shift + Invio~ | Toggle pseudo-tiling (alt) |
+| ~SUPER + T~             | Toggle split layout        |
+| ~SUPER + Space~         | Toggle split layout (alt)  |
+
+** Navigazione focus (Vim-style)
+| Combinazione | Azione         |
+|--------------+----------------|
+| ~SUPER + H~    | Focus sinistra |
+| ~SUPER + J~    | Focus giù      |
+| ~SUPER + K~    | Focus su       |
+| ~SUPER + L~    | Focus destra   |
+
+** Workspace
+| Combinazione      | Azione                                |
+|-------------------+---------------------------------------|
+| ~SUPER + 1…9~       | Vai al workspace 1-9                  |
+| ~SUPER + 0~         | Vai al workspace 10                   |
+| ~SUPER + Tab~       | Workspace precedente                  |
+| ~SUPER + S~         | Toggle special workspace (scratchpad) |
+| ~SUPER + rotellina~ | Workspace successivo/precedente       |
+
+** Sposta finestra tra workspace
+| Combinazione        | Azione                     |
+|---------------------+----------------------------|
+| ~SUPER + Shift + 1…9~ | Sposta finestra su ws 1-9  |
+| ~SUPER + Shift + 0~   | Sposta finestra su ws 10   |
+| ~SUPER + Shift + S~   | Sposta finestra su special |
+
+** Monitor
+| Combinazione        | Azione                         |
+|---------------------+--------------------------------|
+| ~SUPER + ,~ (virgola) | Focus monitor precedente       |
+| ~SUPER + .~ (punto)   | Focus monitor successivo       |
+| ~SUPER + Shift + ,~   | Sposta workspace su monitor -1 |
+| ~SUPER + Shift + .~   | Sposta workspace su monitor +1 |
+
+** Mouse
+| Combinazione                  | Azione                |
+|-------------------------------+-----------------------|
+| ~SUPER + click sinistro~ (drag) | Sposta finestra       |
+| ~SUPER + click destro~ (drag)   | Ridimensiona finestra |
+
+** Sistema
+| Combinazione      | Azione                    |
+|-------------------+---------------------------|
+| ~SUPER + B~         | Toggle Waybar             |
+| ~SUPER + R~         | Ricarica Hyprland         |
+| ~SUPER + N~         | Toggle notifiche (SwayNC) |
+| ~SUPER + Esc~       | Blocca schermo (Hyprlock) |
+| ~SUPER + Shift + Q~ | Esci da Hyprland          |
+| ~SUPER + Shift + T~ | Toggle tema chiaro/scuro  |
+
+** Multimedia (tasti funzione)
+| Tasto                 | Azione             |
+|-----------------------+--------------------|
+| ~XF86AudioRaiseVolume~  | Volume +5%         |
+| ~XF86AudioLowerVolume~  | Volume -5%         |
+| ~XF86AudioMute~         | Mute toggle        |
+| ~XF86AudioMicMute~      | Mute microfono     |
+| ~XF86AudioNext~         | Traccia successiva |
+| ~XF86AudioPrev~         | Traccia precedente |
+| ~XF86AudioPause~ / ~Play~ | Play/Pause         |
+| ~XF86MonBrightnessUp~   | Luminosità +5%     |
+| ~XF86MonBrightnessDown~ | Luminosità -5%     |
+
+** Waybar (click)
+| Modulo  | Click | Azione                |
+|---------+-------+-----------------------|
+| Network | ~click~ | ~iwctl~ (gestione WiFi) |
+| Audio   | ~click~ | ~pavucontrol~ (mixer)   |
+
+** Touchpad (gesture)
+| Gestione                   | Azione           |
+|----------------------------+------------------|
+| Swipe orizzontale a 3 dita | Cambia workspace |
+
+* Configurazioni
+
+** Hyprland (~hypr/~)
+Il compositor è configurato via Lua (=hyprland.lua=), con moduli separati in =hypr/conf/=:
+- =keybinding.lua= – Tutte le scorciatoie da tastiera
+- =autorun.lua= – Variabili d'ambiente e avvio automatico (Waybar, SwayNC, portali)
+- =window.lua= – Regole finestre, gaps, bordi, animazioni
+- =permessi.lua= – Permessi screencopy (OBS, Hyprshot)
+- =keybord-layout.lua= – Layout tastiera US intl., gesture touchpad
+
+** Ghostty (~ghostty/~)
+Terminale con:
+- Tema chiaro/scuro automatico
+- Font OpenDyslexicM Nerd Font Mono
+- Shader cursore animato (=cursor_blaze.glsl=)
+- Opacità sfondo 0.78 con blur
+
+** Waybar (~waybar/~)
+Barra di stato in alto con moduli: workspace, submode, titolo finestra, audio,
+luminosità, CPU, RAM, rete, orario (Europe/Rome), vassoio di sistema.
+
+* Licenza
+Distribuito sotto licenza GPL v3. Vedi file =license=.
