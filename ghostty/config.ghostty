@@ -1,9 +1,0 @@
-theme = light:light,dark:dark
-font-family = OpenDyslexicM Nerd Font Mono
-font-size = 10
-custom-shader = shaders/cursor_blaze.glsl
-# Disabilita il supporto alle legature se non ti servono (risparmia CPU)
-font-feature = -liga
-quick-terminal-animation-duration = 0.08
-background-opacity = 0.78
-background-blur = true

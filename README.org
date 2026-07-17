@@ -1,45 +1,39 @@
 #+TITLE: Workstation Dotfiles
 #+AUTHOR: Nicola Ferru (NFVblog)
 #+LICENSE: GPL v3
-#+DESCRIPTION: Configurazione personale per workstation Arch Linux con Hyprland
+#+DESCRIPTION: Configurazione personale per workstation Arch Linux con Sway
 
-Configurazione personale dei dotfiles per [[https://archlinux.org][Arch Linux]] basata su [[https://hyprland.org][Hyprland]] (compositor Wayland), [[https://ghostty.org][Ghostty]] (terminale) e [[https://github.com/Alexays/Waybar][Waybar]] (barra di stato).
+Configurazione personale dei dotfiles per [[https://archlinux.org][Arch Linux]] basata su [[https://swaywm.org][Sway]] (compositor Wayland i3-compatible), [[https://codeberg.org/dnkl/foot][Foot]] (terminale) e [[https://i3wm.org/i3blocks][i3blocks]] (barra di stato).
 
 * Dipendenze
 Elenco dei pacchetti necessari:
 
-** Hyprland e componenti
-- =hyprland= – Compositor Wayland
-- =hypridle= – Demone idle / sospensione
-- =hyprlock= – Schermata di blocco
-- =hyprsunset= – Filtro luce blu
-- =hyprpolkitagent= – Permessi screencopy
-- =xdg-desktop-portal-hyprland= – Portale per integrazione desktop
-- =xdg-desktop-portal-gtk= – Portale GTK
+** Sway e componenti
+- =sway= – Compositor Wayland
+- =swayidle= – Demone idle / sospensione
+- =swaylock= – Schermata di blocco
+- =swaync= – Centro notifiche
+- =polkit-gnome= – Agenti di autenticazione
 
 ** Applicazioni
-- =ghostty= – Terminale
-- =waybar= – Barra di stato
-- =pcmanfm-qt= – File manager
-- =hyprlauncher= – Avvio applicazioni (dmenu-style)
+- =foot= – Terminale
+- =rofi= – Avvio applicazioni (dmenu-style)
 - =emacs= (con =emacsclient=) – Editor / productivity suite
-- =swaync= – Centro notifiche
+- =i3blocks= – Moduli per la barra di stato
 - =pavucontrol= – Mixer audio
-- =iwd= (=iwctl=) – Gestione WiFi
-- =obs-studio= – Permessi screencopy
-- =hyprshot= – Screenshot (permessi concessi)
+- =darkman= – Toggle tema chiaro/scuro
 
 ** Utilità di sistema
 - =pipewire= / =wireplumber= (=wpctl=) – Gestione audio
 - =playerctl= – Controllo media (play/pause/next/prev)
 - =brightnessctl= – Controllo luminosità
-- =darkman= – Toggle tema chiaro/scuro
-- =qt6ct= – Theming Qt sotto Wayland
+- =wlsyshot= – Screenshot
+- =emojimenu= – Menu emoji
+- =device-menu= – Menu dispositivi
 - =dbus= (=dbus-update-activation-environment=)
 
 ** Font (consigliati)
-- =ttf-jetbrains-mono-nerd= – Font per Hyprlock
-- =otf-opendyslexic-nerd= – Font per Ghostty (opzionale, modificabile nel config)
+- =otf-opendyslexic-nerd= – Font principale per terminale e sway
 
 * Installazione
 #+BEGIN_SRC sh
@@ -47,47 +41,58 @@ Elenco dei pacchetti necessari:
 git clone https://github.com/NFVblog/workstation-dotfiles.git ~/.dotfiles
 
 # Crea i symlink nella tua home
-ln -sf ~/.dotfiles/ghostty  ~/.config/ghostty
-ln -sf ~/.dotfiles/hypr     ~/.config/hypr
-ln -sf ~/.dotfiles/waybar   ~/.config/waybar
+ln -sf ~/.dotfiles/sway    ~/.config/sway
+ln -sf ~/.dotfiles/foot    ~/.config/foot
 #+END_SRC
 
 * Struttura del repository
-| Percorso               | Descrizione                        |
-|------------------------+------------------------------------|
-| ~hypr/hyprland.lua~      | Punto di ingresso Lua per Hyprland |
-| ~hypr/conf/~             | Moduli di configurazione Hyprland  |
-| ~hypr/hyprlock.conf~     | Schermata di blocco                |
-| ~hypr/hypridle.conf~     | Timeout idle e sospensione         |
-| ~hypr/hyprsunset.conf~   | Filtro luce blu notturna           |
-| ~ghostty/config.ghostty~ | Configurazione terminale           |
-| ~ghostty/shaders/~       | Shader GLSL per effetti terminale  |
-| ~ghostty/themes/~        | Tema chiaro/scuro per Ghostty      |
-| ~waybar/config.jsonc~    | Barra di stato                     |
-| ~waybar/style.css~       | Stile CSS della barra              |
+| Percorso                          | Descrizione                              |
+|-----------------------------------+------------------------------------------|
+| ~sway/config~                       | Configurazione principale Sway           |
+| ~sway/config.d/~                    | Moduli di configurazione separati        |
+| ~foot/foot.ini~                     | Configurazione terminale Foot            |
+| ~foot/themes/~                      | Temi chiaro/scuro per Foot               |
+| ~xdg-desktop-portal/portals.conf~   | Configurazione portali desktop           |
+
+** Moduli Sway (~sway/config.d/)
+| Modulo                  | Descrizione                                    |
+|-------------------------+------------------------------------------------|
+| ~50-systemd-user.conf~    | Integrazione systemd user                      |
+| ~app.conf~                | Regole finestre per applicazioni specifiche     |
+| ~applet.conf~             | Applet di sistema                              |
+| ~clipboard.conf~          | Gestione appunti                               |
+| ~colors.conf~             | Colori finestre e toggle darkman               |
+| ~gaps.conf~               | Gaps tra le finestre                           |
+| ~gestures.conf~           | Gesture touchpad                               |
+| ~keybind.conf~            | Scorciatoie extra (screenshot, notifiche, ecc) |
+| ~keybord-layout.conf~     | Layout tastiera                                |
+| ~media.conf~              | Tasti multimediali (volume, luminosità, ecc)   |
+| ~monitor.conf~            | Configurazione monitor                         |
+| ~tablet.conf~             | Configurazione tablet                          |
+| ~touchscreen.conf~        | Configurazione touchscreen                     |
 
 * Tabelle scorciatoie
 
 ** Avvio applicazioni
 | Combinazione  | Azione                    |
 |---------------+---------------------------|
-| ~SUPER + Invio~ | Terminale (Ghostty)       |
-| ~SUPER + D~     | Launcher (hyprlauncher)   |
-| ~SUPER + E~     | File manager (pcmanfm-qt) |
+| ~SUPER + Invio~ | Terminale (Foot)          |
+| ~SUPER + D~     | Launcher (rofi)           |
 | ~SUPER + F1~    | Emacs (emacsclient -c)    |
 
 ** Gestione finestre
 | Combinazione          | Azione                     |
 |-----------------------+----------------------------|
-| ~SUPER + Q~             | Chiudi finestra            |
-| ~SUPER + F~             | Fullscreen (nativo)        |
-| ~SUPER + M~             | Fullscreen (monocle)       |
-| ~SUPER + V~             | Toggle floating            |
-| ~SUPER + Shift + Space~ | Toggle floating (alt)      |
-| ~SUPER + P~             | Toggle pseudo-tiling       |
-| ~SUPER + Shift + Invio~ | Toggle pseudo-tiling (alt) |
-| ~SUPER + T~             | Toggle split layout        |
-| ~SUPER + Space~         | Toggle split layout (alt)  |
+| ~SUPER + Shift + Q~    | Chiudi finestra            |
+| ~SUPER + F~             | Fullscreen                 |
+| ~SUPER + Shift + Space~ | Toggle floating            |
+| ~SUPER + Space~         | Toggle focus (floating)    |
+| ~SUPER + B~             | Split orizzontale          |
+| ~SUPER + V~             | Split verticale            |
+| ~SUPER + S~             | Layout stacking            |
+| ~SUPER + W~             | Layout tabbed              |
+| ~SUPER + E~             | Toggle split layout        |
+| ~SUPER + A~             | Focus parent               |
 
 ** Navigazione focus (Vim-style)
 | Combinazione | Azione         |
@@ -97,45 +102,45 @@ ln -sf ~/.dotfiles/waybar   ~/.config/waybar
 | ~SUPER + K~    | Focus su       |
 | ~SUPER + L~    | Focus destra   |
 
+** Sposta finestre (Vim-style)
+| Combinazione      | Azione           |
+|-------------------+------------------|
+| ~SUPER + Shift + H~ | Sposta sinistra  |
+| ~SUPER + Shift + J~ | Sposta giù       |
+| ~SUPER + Shift + K~ | Sposta su        |
+| ~SUPER + Shift + L~ | Sposta destra    |
+
 ** Workspace
-| Combinazione      | Azione                                |
-|-------------------+---------------------------------------|
-| ~SUPER + 1…9~       | Vai al workspace 1-9                  |
-| ~SUPER + 0~         | Vai al workspace 10                   |
-| ~SUPER + Tab~       | Workspace precedente                  |
-| ~SUPER + S~         | Toggle special workspace (scratchpad) |
-| ~SUPER + rotellina~ | Workspace successivo/precedente       |
+| Combinazione      | Azione                   |
+|-------------------+--------------------------|
+| ~SUPER + 1…9~       | Vai al workspace 1-9     |
+| ~SUPER + 0~         | Vai al workspace 10      |
+| ~SUPER + Shift + 1…9~ | Sposta finestra su ws 1-9 |
+| ~SUPER + Shift + 0~   | Sposta finestra su ws 10  |
 
-** Sposta finestra tra workspace
-| Combinazione        | Azione                     |
-|---------------------+----------------------------|
-| ~SUPER + Shift + 1…9~ | Sposta finestra su ws 1-9  |
-| ~SUPER + Shift + 0~   | Sposta finestra su ws 10   |
-| ~SUPER + Shift + S~   | Sposta finestra su special |
+** Scratchpad
+| Combinazione        | Azione                       |
+|---------------------+------------------------------|
+| ~SUPER + Shift + -~   | Sposta finestra in scratchpad |
+| ~SUPER + -~           | Mostra/nascondi scratchpad    |
 
-** Monitor
-| Combinazione        | Azione                         |
-|---------------------+--------------------------------|
-| ~SUPER + ,~ (virgola) | Focus monitor precedente       |
-| ~SUPER + .~ (punto)   | Focus monitor successivo       |
-| ~SUPER + Shift + ,~   | Sposta workspace su monitor -1 |
-| ~SUPER + Shift + .~   | Sposta workspace su monitor +1 |
-
-** Mouse
-| Combinazione                  | Azione                |
-|-------------------------------+-----------------------|
-| ~SUPER + click sinistro~ (drag) | Sposta finestra       |
-| ~SUPER + click destro~ (drag)   | Ridimensiona finestra |
+** Layout e dimensionamento
+| Combinazione  | Azione               |
+|---------------+----------------------|
+| ~SUPER + R~     | Modalità resize      |
+| ~SUPER + F~     | Fullscreen           |
 
 ** Sistema
-| Combinazione      | Azione                    |
-|-------------------+---------------------------|
-| ~SUPER + B~         | Toggle Waybar             |
-| ~SUPER + R~         | Ricarica Hyprland         |
-| ~SUPER + N~         | Toggle notifiche (SwayNC) |
-| ~SUPER + Esc~       | Blocca schermo (Hyprlock) |
-| ~SUPER + Shift + Q~ | Esci da Hyprland          |
-| ~SUPER + Shift + T~ | Toggle tema chiaro/scuro  |
+| Combinazione        | Azione                      |
+|---------------------+-----------------------------|
+| ~SUPER + N~           | Toggle notifiche (SwayNC)   |
+| ~SUPER + M~           | Menu dispositivi            |
+| ~SUPER + U~           | Menu emoji                  |
+| ~SUPER + Print~       | Screenshot (wlsyshot)       |
+| ~SUPER + T~           | Toggle tema chiaro/scuro    |
+| ~SUPER + Shift + C~   | Ricarica configurazione     |
+| ~SUPER + Shift + E~   | Esci da Sway                |
+| ~Alt + L~             | Blocca schermo (swaylock)   |
 
 ** Multimedia (tasti funzione)
 | Tasto                 | Azione             |
@@ -146,41 +151,42 @@ ln -sf ~/.dotfiles/waybar   ~/.config/waybar
 | ~XF86AudioMicMute~      | Mute microfono     |
 | ~XF86AudioNext~         | Traccia successiva |
 | ~XF86AudioPrev~         | Traccia precedente |
-| ~XF86AudioPause~ / ~Play~ | Play/Pause         |
+| ~XF86AudioPlay~         | Play/Pause         |
 | ~XF86MonBrightnessUp~   | Luminosità +5%     |
 | ~XF86MonBrightnessDown~ | Luminosità -5%     |
-
-** Waybar (click)
-| Modulo  | Click | Azione                |
-|---------+-------+-----------------------|
-| Network | ~click~ | ~iwctl~ (gestione WiFi) |
-| Audio   | ~click~ | ~pavucontrol~ (mixer)   |
-
-** Touchpad (gesture)
-| Gestione                   | Azione           |
-|----------------------------+------------------|
-| Swipe orizzontale a 3 dita | Cambia workspace |
+| ~XF86Search~            | bemenu-run         |
 
 * Configurazioni
 
-** Hyprland (~hypr/~)
-Il compositor è configurato via Lua (=hyprland.lua=), con moduli separati in =hypr/conf/=:
-- =keybinding.lua= – Tutte le scorciatoie da tastiera
-- =autorun.lua= – Variabili d'ambiente e avvio automatico (Waybar, SwayNC, portali)
-- =window.lua= – Regole finestre, gaps, bordi, animazioni
-- =permessi.lua= – Permessi screencopy (OBS, Hyprshot)
-- =keybord-layout.lua= – Layout tastiera US intl., gesture touchpad
+** Sway (~sway/)
+Il compositor è configurato con un file principale =config= e moduli separati in =config.d/=:
+- =keybind.conf= – Scorciatoie extra (screenshot, notifiche, emoji, dispositivi)
+- =colors.conf= – Colori finestre e toggle darkman
+- =media.conf= – Tasti multimediali (volume, luminosità, player)
+- =gaps.conf= – Gaps tra le finestre (smart_gaps, inner/outer 5px)
+- =gestures.conf= – Gesture touchpad per cambiare workspace
+- =monitor.conf= – Configurazione monitor dual-display
+- =app.conf= – Regole finestre per applicazioni (Thunderbird, GNOME Software, Syncthing)
+- =applet.conf= – Applet di sistema
+- =clipboard.conf= – Gestione appunti
+- =keybord-layout.conf= – Layout tastiera
+- =tablet.conf= – Configurazione tablet
+- =touchscreen.conf= – Configurazione touchscreen
 
-** Ghostty (~ghostty/~)
-Terminale con:
-- Tema chiaro/scuro automatico
-- Font OpenDyslexicM Nerd Font Mono
-- Shader cursore animato (=cursor_blaze.glsl=)
-- Opacità sfondo 0.78 con blur
+** Foot (~foot/)
+Terminale minimalista con:
+- Font OpenDyslexicM Nerd Font Mono (size 8)
+- Tema chiaro/scuro con include dinamico (=themes/current.ini=)
+- Cursor beam con blink
+- Scrollback 10000 righe
+- Padding centrato 5px
+- DPI-aware
 
-** Waybar (~waybar/~)
-Barra di stato in alto con moduli: workspace, submode, titolo finestra, audio,
-luminosità, CPU, RAM, rete, orario (Europe/Rome), vassoio di sistema.
+** XDG Desktop Portal (~xdg-desktop-portal/)
+Portali configurati per:
+- Screenshot e ScreenCast via =wlr=
+- Temi via =darkman=
+- Fallback GTK
 
 * Licenza
 Distribuito sotto licenza GPL v3. Vedi file =license=.
